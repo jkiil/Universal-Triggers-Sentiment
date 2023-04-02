@@ -91,10 +91,8 @@ def main():
     # model.cuda()
 
     # where to save the model
-    # model_path = "/tmp/" + EMBEDDING_TYPE + "_" + "model.th"
-    # vocab_path = "/tmp/" + EMBEDDING_TYPE + "_" + "vocab"
-    model_path = EMBEDDING_TYPE + "_" + "model.th"
-    vocab_path = EMBEDDING_TYPE + "_" + "vocab"
+    model_path = "/tmp/" + EMBEDDING_TYPE + "_" + "model.th"
+    vocab_path = "/tmp/" + EMBEDDING_TYPE + "_" + "vocab"
 
     # if the model already exists (its been trained), load the pre-trained weights and vocabulary
     if os.path.isfile(model_path):
