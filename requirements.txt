@@ -1,0 +1,6 @@
+# conda install pytorch-cpu==1.1.0 torchvision-cpu==0.3.0 cpuonly -c pytorch
+# conda install conda-forge numpy=1.19.5
+pytorch_transformers==1.1.0
+allennlp==0.8.5
+scikit_learn==0.21.3
+overrides==3.1.0
