@@ -91,7 +91,6 @@ def main():
     # model.cuda()
 
     # where to save the model
-    print(os.getcwd())
     model_path = "tmp/" + EMBEDDING_TYPE + "_" + "model.th"
     vocab_path = "tmp/" + EMBEDDING_TYPE + "_" + "vocab"
 
