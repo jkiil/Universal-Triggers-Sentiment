@@ -17,9 +17,47 @@ from allennlp.training.metrics import CategoricalAccuracy
 from allennlp.training.trainer import Trainer
 from allennlp.common.util import lazy_groups_of
 from allennlp.data.token_indexers import SingleIdTokenIndexer
-sys.path.append('..')
 import utils
 import attacks
+
+
+def hotflip_attack(averaged_grad, embedding_matrix, trigger_token_ids,
+                   increase_loss=False, num_candidates=1, token_id_to_filter=None):
+    """
+    The "Hotflip" attack described in Equation (2) of the paper. This code is heavily inspired by
+    the nice code of Paul Michel here https://github.com/pmichel31415/translate/blob/paul/
+    pytorch_translate/research/adversarial/adversaries/brute_force_adversary.py
+
+    This function takes in the model's average_grad over a batch of examples, the model's
+    token embedding matrix, and the current trigger token IDs. It returns the top token
+    candidates for each position.
+
+    If increase_loss=True, then the attack reverses the sign of the gradient and tries to increase
+    the loss (decrease the model's probability of the true class). For targeted attacks, you want
+    to decrease the loss of the target class (increase_loss=False).
+    """
+    averaged_grad = averaged_grad.cpu()
+    embedding_matrix = embedding_matrix.cpu()
+    trigger_token_embeds = torch.nn.functional.embedding(torch.LongTensor(trigger_token_ids),
+                                                         embedding_matrix).detach().unsqueeze(0)
+    averaged_grad = averaged_grad.unsqueeze(0)
+    gradient_dot_embedding_matrix = torch.einsum("bij,kj->bik",
+                                                 (averaged_grad, embedding_matrix))
+    if not increase_loss:
+        # lower versus increase the class probability.
+        gradient_dot_embedding_matrix *= -1
+
+    # Set the gradient of filter tokens to be very low so that they are not selected.
+    if token_id_to_filter is not None:
+        for token_id in token_id_to_filter:
+            gradient_dot_embedding_matrix[:, :, token_id] = -1e9
+
+    if num_candidates > 1:  # get top k options
+        _, best_k_ids = torch.topk(
+            gradient_dot_embedding_matrix, num_candidates, dim=2)
+        return best_k_ids.detach().cpu().numpy()[0]
+    _, best_at_each_step = gradient_dot_embedding_matrix.max(2)
+    return best_at_each_step[0].detach().cpu().numpy()
 
 # Simple LSTM classifier that uses the final hidden state to classify Sentiment. Based on AllenNLP
 class LstmClassifier(Model):
@@ -91,8 +129,8 @@ def main():
     # model.cuda()
 
     # where to save the model
-    model_path = "tmp/" + EMBEDDING_TYPE + "_" + "model.th"
-    vocab_path = "tmp/" + EMBEDDING_TYPE + "_" + "vocab"
+    model_path = "sst/tmp/" + EMBEDDING_TYPE + "_" + "model.th"
+    vocab_path = "sst/tmp/" + EMBEDDING_TYPE + "_" + "vocab"
 
     # if the model already exists (its been trained), load the pre-trained weights and vocabulary
     if os.path.isfile(model_path):
@@ -135,7 +173,7 @@ def main():
 
     # filter the dataset to only positive or negative examples
     # (the trigger will cause the opposite prediction)
-    dataset_label_filter = "0"
+    dataset_label_filter = "1"
     targeted_dev_data = []
     for instance in dev_data:
         if instance['label'].label == dataset_label_filter:
@@ -144,6 +182,22 @@ def main():
     # get accuracy before adding triggers
     utils.get_accuracy(model, targeted_dev_data, vocab, trigger_token_ids=None)
     model.train() # rnn cannot do backwards in train mode
+
+    negative_words_file = "sst/negative_words.txt"
+    positive_words_file = "sst/positive_words.txt"
+
+    # Initialize the set of token ids to filter out from candidates
+    token_id_to_filter = {}
+
+    # Read in negative words and add them to the set
+    with open(negative_words_file) as f:
+        for line in f:
+            token_id_to_filter[vocab.get_token_index(line.strip())] = True
+
+    # Read in positive words and add them to the set
+    with open(positive_words_file) as f:
+        for line in f:
+            token_id_to_filter[vocab.get_token_index(line.strip())] = True
 
     # initialize triggers which are concatenated to the input
     num_trigger_tokens = 3
@@ -159,21 +213,11 @@ def main():
         averaged_grad = utils.get_average_grad(model, batch, trigger_token_ids)
 
         # pass the gradients to a particular attack to generate token candidates for each token.
-        cand_trigger_token_ids = attacks.hotflip_attack(averaged_grad,
+        cand_trigger_token_ids = hotflip_attack(averaged_grad,
                                                         embedding_weight,
                                                         trigger_token_ids,
                                                         num_candidates=40,
-                                                        increase_loss=True)
-        # cand_trigger_token_ids = attacks.random_attack(embedding_weight,
-        #                                                trigger_token_ids,
-        #                                                num_candidates=40)
-        # cand_trigger_token_ids = attacks.nearest_neighbor_grad(averaged_grad,
-        #                                                        embedding_weight,
-        #                                                        trigger_token_ids,
-        #                                                        tree,
-        #                                                        100,
-        #                                                        num_candidates=40,
-        #                                                        increase_loss=True)
+                                                        increase_loss=True, token_id_to_filter=token_id_to_filter)
 
         # Tries all of the candidates and returns the trigger sequence with highest loss.
         trigger_token_ids = utils.get_best_candidates(model,
