@@ -556,6 +556,7 @@ chatter
 chatterbox
 cheap
 cheapen
+cheap-looking
 cheaply
 cheat
 cheated
@@ -1403,7 +1404,10 @@ drop-outs
 dropout
 dropouts
 drought
+drown
+drowned
 drowning
+drowns
 drunk
 drunkard
 drunken
@@ -2116,6 +2120,7 @@ ignorant
 ignore
 ill-advised
 ill-conceived
+ill-constructed
 ill-defined
 ill-designed
 ill-fated
@@ -2307,6 +2312,8 @@ incorrigibly
 incredulous
 incredulously
 inculcate
+incurable
+incurably
 indecency
 indecent
 indecently
@@ -3337,6 +3344,7 @@ poor
 poorer
 poorest
 poorly
+poorly-constructed
 posturing
 pout
 poverty
@@ -3411,6 +3419,7 @@ punk
 puny
 puppet
 puppets
+purposeless
 puzzled
 puzzlement
 puzzling
@@ -3449,6 +3458,9 @@ ramshackle
 rancor
 randomly
 rankle
+ransack
+ransacked
+ransacks
 rant
 ranted
 ranting
@@ -3950,6 +3962,7 @@ soreness
 sorrow
 sorrowful
 sorrowfully
+sorriest
 sorry
 sour
 sourly
@@ -4354,6 +4367,7 @@ uglier
 ugliest
 ugliness
 ugly
+ugly-looking
 ulterior
 ultimatum
 ultimatums
@@ -4373,6 +4387,7 @@ unauthentic
 unavailable
 unavoidably
 unbearable
+un-bear-able
 unbearablely
 unbelievable
 unbelievably
@@ -4599,6 +4614,7 @@ upsetting
 upsettingly
 urgent
 useless
+uselessly
 usurp
 usurper
 utterly
