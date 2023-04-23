@@ -4362,10 +4362,12 @@ uglier
 ugliest
 ugliness
 ugly
+ugly-looking
 ulterior
 ultimatum
 ultimatums
 ultra-hardline
+un-bear-able
 un-viewable
 unable
 unacceptable
@@ -4607,6 +4609,7 @@ upsetting
 upsettingly
 urgent
 useless
+uselessly
 usurp
 usurper
 utterly
@@ -4789,3 +4792,13 @@ zealot
 zealous
 zealously
 zombie
+drowns
+cheap-looking
+drown
+incurable
+incurably
+poorly-constructed
+purposeless
+ransack
+ransacked
+ransacks
