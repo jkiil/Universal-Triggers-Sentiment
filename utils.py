@@ -104,12 +104,11 @@ def get_accuracy(model, dev_dataset, vocab, trigger_token_ids=None, snli=False):
     else:
         iterator = BucketIterator(batch_size=128, sorting_keys=[("tokens", "num_tokens")])
     iterator.index_with(vocab)
-    # if trigger_token_ids is None:
-    for batch in lazy_groups_of(iterator(dev_dataset, num_epochs=1, shuffle=False), group_size=1):
-        evaluate_batch(model, batch, None, snli)
-    print("Without Triggers: " + str(model.get_metrics()['accuracy']))
-    # else:
-    if trigger_token_ids is not None:
+    if trigger_token_ids is None:
+        for batch in lazy_groups_of(iterator(dev_dataset, num_epochs=1, shuffle=False), group_size=1):
+            evaluate_batch(model, batch, None, snli)
+        print("Without Triggers: " + str(model.get_metrics()['accuracy']))
+    else:
         print_string = ""
         for idx in trigger_token_ids:
             print_string = print_string + vocab.get_token_from_index(idx) + ', '
