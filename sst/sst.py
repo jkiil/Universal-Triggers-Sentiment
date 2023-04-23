@@ -51,7 +51,7 @@ EMBEDDING_TYPE = "w2v" # what type of word embeddings to use
 def main():
     # Parameters
     model_type = "LSTM" # "GRU" or "LSTM"
-    dataset_label_filter = "1" # 0 attacks negative, 1 attacks positive
+    dataset_label_filter = "0" # 0 attacks negative, 1 attacks positive
     test_triggers = None # [12112, 5504, 3213] # If None, runs the attack as normal; if a list of 3 trigger ids, tests their accuracy on the model
 
     # load the binary SST dataset.
@@ -64,6 +64,8 @@ def main():
     reader = StanfordSentimentTreeBankDatasetReader(granularity="2-class",
                                                     token_indexers={"tokens": single_id_indexer})
     dev_data = reader.read('https://s3-us-west-2.amazonaws.com/allennlp/datasets/sst/dev.txt')
+    reader = StanfordSentimentTreeBankDatasetReader(granularity="2-class",
+                                                    token_indexers={"tokens": single_id_indexer})
     test_data = reader.read('https://s3-us-west-2.amazonaws.com/allennlp/datasets/sst/dev.txt')
 
     vocab = Vocabulary.from_instances(train_data)
