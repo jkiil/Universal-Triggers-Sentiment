@@ -97,7 +97,7 @@ def main():
     reader = StanfordSentimentTreeBankDatasetReader(granularity="2-class",
                                                     token_indexers={"tokens": single_id_indexer})
     dev_data = reader.read('https://s3-us-west-2.amazonaws.com/allennlp/datasets/sst/dev.txt')
-    # test_dataset = reader.read('data/sst/test.txt')
+    test_data = reader.read('https://s3-us-west-2.amazonaws.com/allennlp/datasets/sst/test.txt')
 
     vocab = Vocabulary.from_instances(train_data)
 
@@ -173,11 +173,17 @@ def main():
 
     # filter the dataset to only positive or negative examples
     # (the trigger will cause the opposite prediction)
+    # 0: negative, 1: positive
     dataset_label_filter = "1"
     targeted_dev_data = []
     for instance in dev_data:
         if instance['label'].label == dataset_label_filter:
             targeted_dev_data.append(instance)
+
+    targeted_test_data = []
+    for instance in test_data:
+        if instance['label'].label == dataset_label_filter:
+            targeted_test_data.append(instance)
 
     # get accuracy before adding triggers
     utils.get_accuracy(model, targeted_dev_data, vocab, trigger_token_ids=None)
@@ -226,7 +232,7 @@ def main():
                                                       cand_trigger_token_ids)
 
     # print accuracy after adding triggers
-    utils.get_accuracy(model, targeted_dev_data, vocab, trigger_token_ids)
+    utils.get_accuracy(model, targeted_test_data, vocab, trigger_token_ids)
 
 if __name__ == '__main__':
     main()
