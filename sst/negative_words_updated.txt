@@ -1,3 +1,6 @@
+ill-constructed
+wastes
+hole-ridden
 2-faced
 2-faces
 abnormal
@@ -1404,6 +1407,7 @@ dropout
 dropouts
 drought
 drowning
+drowned
 drunk
 drunkard
 drunken
@@ -1827,6 +1831,7 @@ galling
 gallingly
 galls
 gangster
+gang-raped
 gape
 garbage
 garish
@@ -3613,6 +3618,7 @@ rogue
 rollercoaster
 rot
 rotten
+rotting
 rough
 rremediable
 rubbish
@@ -3951,6 +3957,7 @@ sorrow
 sorrowful
 sorrowfully
 sorry
+sorriest
 sour
 sourly
 spade
@@ -4339,6 +4346,7 @@ tumbled
 tumbles
 tumultuous
 turbulent
+turd
 turmoil
 twist
 twisted
@@ -4354,10 +4362,12 @@ uglier
 ugliest
 ugliness
 ugly
+ugly-looking
 ulterior
 ultimatum
 ultimatums
 ultra-hardline
+un-bear-able
 un-viewable
 unable
 unacceptable
@@ -4599,6 +4609,7 @@ upsetting
 upsettingly
 urgent
 useless
+uselessly
 usurp
 usurper
 utterly
@@ -4781,3 +4792,13 @@ zealot
 zealous
 zealously
 zombie
+drowns
+cheap-looking
+drown
+incurable
+incurably
+poorly-constructed
+purposeless
+ransack
+ransacked
+ransacks

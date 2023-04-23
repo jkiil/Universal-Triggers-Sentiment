@@ -81,6 +81,8 @@ all-around
 alluring
 alluringly
 altruistic
+true-to-life
+life-changing
 altruistically
 amaze
 amazed
@@ -158,6 +160,7 @@ aver
 avid
 avidly
 award
+award-winning
 awarded
 awards
 awe
@@ -201,7 +204,8 @@ better
 better-known
 better-than-expected
 beutifully
-blameless
+blame
+less-compelling
 bless
 blessing
 bliss
@@ -231,6 +235,8 @@ breakthroughs
 breathlessness
 breathtaking
 breathtakingly
+breathing
+breathe
 breeze
 bright
 brighten
@@ -255,11 +261,13 @@ captivate
 captivates
 captivated
 captivating
+captivatingly
 carefree
 cashback
 cashbacks
 catchy
 celebrate
+celebrates
 celebrated
 celebration
 celebratory
@@ -313,6 +321,7 @@ comfortably
 comforting
 comfy
 commend
+commended
 commendable
 commendably
 commitment
@@ -321,6 +330,7 @@ compact
 compactly
 compassion
 compassionate
+compassionately
 compatible
 competitive
 complement
@@ -360,6 +370,7 @@ convient
 convincing
 convincingly
 cool
+sun-splashed
 coolest
 cooperative
 cooperatively
@@ -369,6 +380,9 @@ correctly
 cost-effective
 cost-saving
 counter-attack
+recharge
+recharged
+recharges
 counter-attacks
 courage
 courageous
@@ -489,6 +503,8 @@ ecstatic
 ecstatically
 edify
 educated
+educates
+educate
 effective
 effectively
 effectiveness
@@ -539,7 +555,11 @@ endorsement
 endorses
 endorsing
 energetic
+energy
 energize
+energizes
+energized
+energizing
 energy-efficient
 energy-saving
 engaging
@@ -555,9 +575,13 @@ enjoyed
 enjoying
 enjoyment
 enjoys
+joys
 enlighten
+enlightened
+enlightening
 enlightenment
 enliven
+enlivens
 ennoble
 enough
 enrapt
@@ -567,11 +591,13 @@ enrich
 enrichment
 enterprising
 entertain
+entertained
 entertaining
 entertains
 enthral
 enthrall
 enthralled
+enthralling
 enthuse
 enthusiasm
 enthusiast
@@ -738,6 +764,7 @@ first-class
 first-in-class
 first-rate
 flashy
+flavorful
 flatter
 flattering
 flatteringly
@@ -764,12 +791,14 @@ fortunately
 fortune
 fragrant
 free
+freely
 freed
 freedom
 freedoms
 fresh
 fresher
 freshest
+freshness
 friendliness
 friendly
 frolic
@@ -778,6 +807,7 @@ fruitful
 ftw
 fulfillment
 fun
+funniest
 futurestic
 futuristic
 gaiety
@@ -901,6 +931,7 @@ heartening
 heartfelt
 heartily
 heartwarming
+heart-warming
 heaven
 heavenly
 helped
@@ -1009,9 +1040,14 @@ instantly
 instructive
 instrumental
 integral
+integrity
 integrated
 intelligence
 intelligent
+intelligently
+intoxicate
+intoxicating
+intoxicatingly
 intelligible
 interesting
 interests
@@ -1058,6 +1094,7 @@ keen
 keenly
 keenness
 kid-friendly
+kiddie-oriented
 kindliness
 kindly
 kindness
@@ -1084,6 +1121,8 @@ liberate
 liberation
 liberty
 lifesaver
+life-affirming
+life-embracing
 light-hearted
 lighter
 likable
@@ -1186,6 +1225,9 @@ miraculous
 miraculously
 miraculousness
 modern
+modernize
+modernizes
+modernized
 modest
 modesty
 momentous
@@ -1207,6 +1249,7 @@ nimble
 noble
 nobly
 noiseless
+nonjudgmental
 non-violence
 non-violent
 notably
@@ -1289,6 +1332,7 @@ permissible
 perseverance
 persevere
 personages
+personable
 personalized
 phenomenal
 phenomenally
@@ -1518,6 +1562,7 @@ reverence
 reverent
 reverently
 revitalize
+vitality
 revival
 revive
 revives
@@ -1593,6 +1638,7 @@ sensible
 sensibly
 sensitive
 serene
+serenely
 serenity
 sexy
 sharp
@@ -1648,6 +1694,7 @@ soothe
 soothingly
 sophisticated
 soulful
+soul-stirring
 soundly
 soundness
 spacious
@@ -1796,6 +1843,7 @@ thank
 thankful
 thinner
 thoughtful
+thought-provoking
 thoughtfully
 thoughtfulness
 thrift
@@ -1806,6 +1854,7 @@ thrilling
 thrillingly
 thrills
 thrive
+riveting
 thriving
 thumb-up
 thumbs-up
@@ -1813,6 +1862,7 @@ tickle
 tidy
 time-honored
 timely
+timeless
 tingle
 titillate
 titillating
@@ -1859,6 +1909,7 @@ ultra-crisp
 unabashed
 unabashedly
 unaffected
+unafraid
 unassailable
 unbeatable
 unbiased
@@ -1877,6 +1928,7 @@ unequivocally
 unfazed
 unfettered
 unforgettable
+unforgettably
 unity
 unlimited
 unmatched
@@ -1937,20 +1989,24 @@ warmth
 wealthy
 welcome
 well
+well-acted
 well-backlit
 well-balanced
 well-behaved
 well-being
 well-bred
 well-connected
+well-done
 well-educated
 well-established
 well-informed
+informative
 well-intentioned
 well-known
 well-made
 well-managed
 well-mannered
+well-paced
 well-positioned
 well-received
 well-regarded
@@ -1973,6 +2029,7 @@ winnable
 winner
 winners
 winning
+winningly
 wins
 wisdom
 wise
@@ -1986,6 +2043,7 @@ wonderous
 wonderously
 wonders
 wondrous
+wondrously
 woo
 work
 workable
