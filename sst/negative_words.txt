@@ -111,8 +111,6 @@ allergies
 allergy
 aloof
 altercation
-amateurish
-amateurishly
 ambiguity
 ambiguous
 ambivalence
@@ -328,7 +326,6 @@ bewitch
 bias
 biased
 biases
-bibbidy-bobbidi-bland
 bicker
 bickering
 bid-rigging
@@ -407,15 +404,11 @@ boredom
 bores
 boring
 botch
-botched
-botching
 bother
 bothered
 bothering
 bothers
 bothersome
-bottom
-bottom-feeder
 bowdlerize
 boycott
 braggart
@@ -556,7 +549,6 @@ chagrin
 challenging
 chaos
 chaotic
-charmless
 chasten
 chastise
 chastisement
@@ -564,7 +556,6 @@ chatter
 chatterbox
 cheap
 cheapen
-cheapened
 cheap-looking
 cheaply
 cheat
@@ -581,7 +572,6 @@ chill
 chilly
 chintzy
 choke
-chokes
 choleric
 choppy
 chore
@@ -817,7 +807,6 @@ curt
 cuss
 cussed
 cutthroat
-cutting-room
 cynical
 cynicism
 d*mn
@@ -918,7 +907,6 @@ degenerately
 degeneration
 degradation
 degrade
-degraded
 degrading
 degradingly
 dehumanization
@@ -1094,7 +1082,6 @@ ding
 dings
 dinky
 dire
-directionless
 direly
 direness
 dirt
@@ -1221,7 +1208,6 @@ disintegrates
 disintegration
 disinterest
 disinterested
-disjointed
 dislike
 disliked
 dislikes
@@ -1406,8 +1392,6 @@ dreadful
 dreadfully
 dreadfulness
 dreary
-dreck
-drek
 dripped
 dripping
 drippy
@@ -1475,7 +1459,6 @@ emergency
 emphatic
 emphatically
 emptiness
-empty
 encroach
 encroachment
 endanger
@@ -1684,7 +1667,6 @@ fidgety
 fiend
 fiendish
 fierce
-fifth-rate
 figurehead
 filth
 filthy
@@ -1697,8 +1679,6 @@ flabbergasted
 flagging
 flagrant
 flagrantly
-flail
-flails
 flair
 flairs
 flak
@@ -1713,7 +1693,6 @@ flareup
 flareups
 flat-out
 flaunt
-flavorless
 flaw
 flawed
 flaws
@@ -1735,8 +1714,6 @@ flirty
 floored
 flounder
 floundering
-flop
-flopped
 flout
 fluster
 foe
@@ -1765,7 +1742,6 @@ forswear
 foul
 foully
 foulness
-fourth-rate
 fractious
 fractiously
 fracture
@@ -1956,9 +1932,6 @@ hacks
 haggard
 haggle
 hairloss
-half-assed
-half-baked
-halfbaked
 halfhearted
 halfheartedly
 hallucinate
@@ -2078,7 +2051,6 @@ hoard
 hoax
 hobble
 hogs
-hole-ridden
 hollow
 hoodium
 hoodwink
@@ -2151,13 +2123,9 @@ ill-conceived
 ill-constructed
 ill-defined
 ill-designed
-ill-equipped
 ill-fated
 ill-favored
-ill-fitting
-ill-fitted
 ill-formed
-ill-informed
 ill-mannered
 ill-natured
 ill-sorted
@@ -2442,7 +2410,6 @@ inflated
 inflationary
 inflexible
 inflict
-infomercial
 infraction
 infringe
 infringement
@@ -2672,8 +2639,6 @@ kills
 knave
 knife
 knock
-knockoff
-knock-off
 knotted
 kook
 kooky
@@ -2721,8 +2686,6 @@ lawlessness
 layoff
 layoff-happy
 lazy
-laziness
-laziest
 leak
 leakage
 leakages
@@ -2739,7 +2702,6 @@ leery
 left-leaning
 lemon
 lengthy
-less-compelling
 less-developed
 lesser-known
 letch
@@ -2916,7 +2878,6 @@ misbehave
 misbehavior
 miscalculate
 miscalculation
-miscast
 miscellaneous
 mischief
 mischievous
@@ -2926,7 +2887,6 @@ misconceptions
 miscreant
 miscreants
 misdirection
-misdirected
 miser
 miserable
 miserableness
@@ -2942,7 +2902,6 @@ misguidance
 misguide
 misguided
 mishandle
-mishandled
 mishap
 misinform
 misinformed
@@ -3091,8 +3050,6 @@ noises
 noisier
 noisy
 non-confidence
-non-too-original
-none-too-original
 nonexistent
 nonresponsive
 nonsense
@@ -3156,9 +3113,6 @@ offensive
 offensively
 offensiveness
 officious
-old
-old-fashioned
-old-fashioned-movie
 ominous
 ominously
 omission
@@ -3168,7 +3122,6 @@ onerous
 onerously
 onslaught
 opinionated
-oprahfication
 opponent
 opportunistic
 oppose
@@ -3200,7 +3153,6 @@ outsider
 over-acted
 over-awe
 over-balanced
-over-cooked
 over-hyped
 over-priced
 over-valuation
@@ -3212,7 +3164,6 @@ overbalanced
 overbearing
 overbearingly
 overblown
-overcooked
 overdo
 overdone
 overdue
@@ -3469,7 +3420,6 @@ puny
 puppet
 puppets
 purposeless
-putrid
 puzzled
 puzzlement
 puzzling
@@ -3542,7 +3492,6 @@ recoil
 recourses
 redundancy
 redundant
-reek
 refusal
 refuse
 refused
@@ -3676,7 +3625,6 @@ rogue
 rollercoaster
 rot
 rotten
-rotting
 rough
 rremediable
 rubbish
@@ -3698,8 +3646,6 @@ run-down
 runaway
 rupture
 rust
-rusted
-rusted-out
 rusts
 rusty
 rut
@@ -3708,7 +3654,6 @@ ruthlessly
 ruthlessness
 ruts
 sabotage
-sabotaged
 sack
 sacrificed
 sad
@@ -3797,7 +3742,6 @@ scuffs
 scum
 scummy
 second-class
-second-rate
 second-tier
 secretive
 sedentary
@@ -3876,7 +3820,6 @@ shriek
 shrill
 shrilly
 shrivel
-shriveled
 shroud
 shrouded
 shrug
@@ -3927,7 +3870,6 @@ slave
 slaves
 sleazy
 slime
-slob
 slog
 slogged
 slogging
@@ -3937,11 +3879,9 @@ sloooow
 slooow
 sloow
 sloppily
-sloppiness
 sloppy
 sloth
 slothful
-slovenly
 slow
 slow-moving
 slowed
@@ -4013,7 +3953,6 @@ soapy
 sob
 sober
 sobering
-soggy
 solemn
 solicitude
 somber
@@ -4066,8 +4005,6 @@ sputter
 squabble
 squabbling
 squander
-squandering
-squanders
 squash
 squeak
 squeaks
@@ -4276,7 +4213,6 @@ tarnish
 tarnished
 tarnishes
 tarnishing
-tasteless
 tattered
 taunt
 taunting
@@ -4314,7 +4250,6 @@ tetchily
 tetchy
 thankless
 thicker
-third-rate
 thirst
 thorny
 thoughtless
@@ -4417,7 +4352,6 @@ tumbled
 tumbles
 tumultuous
 turbulent
-turd
 turmoil
 twist
 twisted
@@ -4467,7 +4401,6 @@ uncollectible
 uncomfortable
 uncomfortably
 uncomfy
-uncompelling
 uncompetitive
 uncompromising
 uncompromisingly
@@ -4476,7 +4409,6 @@ unconstitutional
 uncontrolled
 unconvincing
 unconvincingly
-uncoordinated
 uncooperative
 uncouth
 uncreative
@@ -4511,9 +4443,6 @@ uneasiness
 uneasy
 uneconomical
 unemployed
-unengaged
-unengaging
-unentertaining
 unequal
 unethical
 uneven
@@ -4529,7 +4458,6 @@ unfavorable
 unfeeling
 unfinished
 unfit
-unfocused
 unforeseen
 unforgiving
 unfortunate
@@ -4548,18 +4476,11 @@ unhelpful
 unilateralism
 unimaginable
 unimaginably
-unimaginative
 unimportant
-unimpressive
-unimpressed
 uninformed
 uninsured
-uninspired
-uninspiring
 unintelligible
 unintelligile
-uninteresting
-uninventive
 unipolar
 unjust
 unjustifiable
@@ -4579,7 +4500,6 @@ unlicensed
 unlikely
 unlucky
 unmoved
-unmotivated
 unnatural
 unnaturally
 unnecessary
@@ -4622,8 +4542,6 @@ unrest
 unruly
 unsafe
 unsatisfactory
-unsatisfied
-unsatisfying
 unsavory
 unscrupulous
 unscrupulously
@@ -4650,7 +4568,6 @@ unsupportive
 unsure
 unsuspecting
 unsustainable
-untalented
 untenable
 untested
 unthinkable
@@ -4783,16 +4700,12 @@ warped
 wary
 washed-out
 waste
-waster
 wasted
-wastes
 wasteful
 wastefulness
 wasting
 water-down
 watered-down
-water-logged
-waterlogged
 wayward
 weak
 weaken
@@ -4814,7 +4727,6 @@ whine
 whining
 whiny
 whips
-white-empowered
 whore
 whores
 wicked

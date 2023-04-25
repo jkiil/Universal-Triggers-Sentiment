@@ -124,10 +124,6 @@ class FFNNClassifier(Model):
         #       Do not apply softmax, since we will use F.cross_entropy as the loss function.
         # START HERE
         embeddings = self.embed(tokens)
-        # print(f"\n{embeddings}")
-        # print(embeddings.shape)
-        # print(torch.mean(embeddings, dim=1).shape)
-        # take mean of embeddings
         mean_embeddings = torch.mean(embeddings, dim=1)
         hidden = self.hidden(mean_embeddings)
         logits = self.output(torch.sigmoid(hidden))
@@ -190,7 +186,7 @@ def main():
     # if the model already exists (its been trained), load the pre-trained weights and vocabulary
     if os.path.isfile(model_path):
         vocab = Vocabulary.from_files(vocab_path)
-        model = FFNNClassifier(word_embeddings, word_embedding_dim, 128, vocab)
+        model = FFNNClassifier(word_embeddings, word_embedding_dim, 256, vocab)
         with open(model_path, 'rb') as f:
             model.load_state_dict(torch.load(f))
     # otherwise train model from scratch and save its weights
@@ -229,7 +225,7 @@ def main():
     # filter the dataset to only positive or negative examples
     # (the trigger will cause the opposite prediction)
     # 0: negative, 1: positive
-    dataset_label_filter = "1"
+    dataset_label_filter = "0"
     targeted_dev_data = []
     for instance in dev_data:
         if instance['label'].label == dataset_label_filter:

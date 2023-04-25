@@ -174,7 +174,7 @@ def main():
     # filter the dataset to only positive or negative examples
     # (the trigger will cause the opposite prediction)
     # 0: negative, 1: positive
-    dataset_label_filter = "1"
+    dataset_label_filter = "0"
     targeted_dev_data = []
     for instance in dev_data:
         if instance['label'].label == dataset_label_filter:
