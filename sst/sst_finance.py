@@ -215,7 +215,7 @@ def main():
 
     # filter the dataset to only positive or negative examples
     # (the trigger will cause the opposite prediction)
-    dataset_label_filter = "1"
+    dataset_label_filter = "0"
     targeted_dev_data = []
     for instance in dev_data:
         if instance['label'].label == dataset_label_filter:
@@ -245,7 +245,7 @@ def main():
 
     # initialize triggers which are concatenated to the input
     num_trigger_tokens = 3
-    trigger_token_ids = [vocab.get_token_index("test")] * num_trigger_tokens
+    trigger_token_ids = [vocab.get_token_index("the")] * num_trigger_tokens
 
     # sample batches, update the triggers, and repeat
     for batch in lazy_groups_of(iterator(targeted_dev_data, num_epochs=5, shuffle=True), group_size=1):
