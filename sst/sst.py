@@ -48,12 +48,7 @@ class LstmClassifier(Model):
 
 EMBEDDING_TYPE = "w2v" # what type of word embeddings to use
 
-def main():
-    # Parameters
-    model_type = "LSTM" # "GRU" or "LSTM"
-    dataset_label_filter = "0" # 0 attacks negative, 1 attacks positive
-    test_triggers = None # [12112, 5504, 3213] # If None, runs the attack as normal; if a list of 3 trigger ids, tests their accuracy on the model
-
+def main(model_type, dataset_label_filter, test_triggers, model_no_str):
     # load the binary SST dataset.
     single_id_indexer = SingleIdTokenIndexer(lowercase_tokens=True) # word tokenizer
     # use_subtrees gives us a bit of extra data by breaking down each example into sub sentences.
@@ -107,7 +102,7 @@ def main():
     model.cuda()
 
     # where to save the model
-    model_path = "tmp\\" + EMBEDDING_TYPE + "_" + model_type + "_" + dataset_label_filter + "_" + "model.th"
+    model_path = "tmp\\" + EMBEDDING_TYPE + "_" + model_type + "_" + dataset_label_filter + "_" + model_no_str + "model.th"
     vocab_path = "tmp\\" + EMBEDDING_TYPE + "_" + "vocab"
 
     # if the model already exists (its been trained), load the pre-trained weights and vocabulary
@@ -237,4 +232,11 @@ def main():
     utils.get_accuracy(model, targeted_test_data, vocab, trigger_token_ids)
 
 if __name__ == '__main__':
-    main()
+    # Parameters
+    model_type = "LSTM" # "GRU" or "LSTM"
+    dataset_label_filter = "1" # 0 attacks negative, 1 attacks positive
+    test_triggers = [5677, 11223, 12713] # If None, runs the attack as normal; if a list of 3 trigger ids, tests their accuracy on the model
+    # model_no_str: determines what file path the model is saved at
+    # for i in range(1, 6):
+    #     main(model_type, dataset_label_filter, test_triggers, str(i))
+    main(model_type, dataset_label_filter, test_triggers, "")
