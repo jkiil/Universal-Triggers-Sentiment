@@ -18,14 +18,13 @@ from allennlp.data.token_indexers import SingleIdTokenIndexer
 import utils
 from datasets import load_dataset
 from allennlp.data import DatasetReader, Instance
-from allennlp.data.fields import TextField, LabelField
+from allennlp.data.fields import TextField, LabelField, Field
 from allennlp.data.tokenizers import Tokenizer
 from nltk.tokenize import WhitespaceTokenizer
 from allennlp.data.token_indexers import TokenIndexer, SingleIdTokenIndexer
 from typing import Iterable, List, Dict
 from allennlp.data.tokenizers import Token
 from sklearn.model_selection import train_test_split
-
 
 def hotflip_attack(averaged_grad, embedding_matrix, trigger_token_ids,
                    increase_loss=False, num_candidates=1, token_id_to_filter=None):
@@ -123,11 +122,10 @@ class FinancialPhraseBankDatasetReader(DatasetReader):
     
 EMBEDDING_TYPE = "w2v"  # what type of word embeddings to use
 
-
 def main():
 
     # Set random seed
-    torch.manual_seed(42)
+    torch.manual_seed(116)
 
     # Read financial phrasebank dataset from HuggingFace
     # Load the Financial Phrasebank dataset from HuggingFace
@@ -137,8 +135,8 @@ def main():
     data = reader.read("")
 
     # Split data into train and test and validation sets
-    train_data, test_data = train_test_split(data, test_size=0.1, random_state=42)
-    train_data, dev_data = train_test_split(train_data, test_size=0.1, random_state=42)
+    train_data, dev_data = train_test_split(data, test_size=0.2, random_state=116)
+    train_data, test_data = train_test_split(train_data, test_size=0.2, random_state=116)
     print("Number of training instances:", len(train_data))
     
     vocab = Vocabulary.from_instances(train_data)
@@ -215,11 +213,16 @@ def main():
 
     # filter the dataset to only positive or negative examples
     # (the trigger will cause the opposite prediction)
-    dataset_label_filter = "0"
+    dataset_label_filter = "1"
     targeted_dev_data = []
     for instance in dev_data:
         if instance['label'].label == dataset_label_filter:
             targeted_dev_data.append(instance)
+
+    targeted_test_data = []
+    for instance in test_data:
+        if instance['label'].label == dataset_label_filter:
+            targeted_test_data.append(instance)
 
     print("Number of dev instances:", len(targeted_dev_data))
 
@@ -270,7 +273,7 @@ def main():
                                                       cand_trigger_token_ids)
 
     # print accuracy after adding triggers
-    utils.get_accuracy(model, test_data, vocab, trigger_token_ids)
+    utils.get_accuracy(model, targeted_test_data, vocab, trigger_token_ids)
 
 
 if __name__ == '__main__':
