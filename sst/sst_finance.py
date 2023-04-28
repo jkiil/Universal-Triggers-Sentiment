@@ -1,8 +1,6 @@
 import os.path
 import torch
 import torch.optim as optim
-from allennlp.data.dataset_readers.stanford_sentiment_tree_bank import \
-    StanfordSentimentTreeBankDatasetReader
 from allennlp.data.iterators import BucketIterator, BasicIterator
 from allennlp.data.vocabulary import Vocabulary
 from allennlp.models import Model
@@ -136,7 +134,7 @@ def main():
 
     # Split data into train and test and validation sets
     train_data, dev_data = train_test_split(data, test_size=0.2, random_state=116)
-    train_data, test_data = train_test_split(train_data, test_size=0.2, random_state=116)
+    dev_data, test_data = train_test_split(dev_data, test_size=0.5, random_state=116)
     print("Number of training instances:", len(train_data))
     
     vocab = Vocabulary.from_instances(train_data)
