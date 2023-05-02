@@ -1,8 +1,14 @@
+import attacks
+import utils
+import sys
 import os.path
 import torch
 import torch.optim as optim
-from allennlp.data.dataset_readers.stanford_sentiment_tree_bank import \
-    StanfordSentimentTreeBankDatasetReader
+from allennlp.data import DatasetReader, Instance
+from allennlp.data.fields import TextField, LabelField, Field
+from allennlp.data.token_indexers import TokenIndexer, SingleIdTokenIndexer
+from allennlp.data.tokenizers import Tokenizer, Token
+from nltk.tokenize import TweetTokenizer
 from allennlp.data.iterators import BucketIterator, BasicIterator
 from allennlp.data.vocabulary import Vocabulary
 from allennlp.models import Model
@@ -15,53 +21,9 @@ from allennlp.training.metrics import CategoricalAccuracy
 from allennlp.training.trainer import Trainer
 from allennlp.common.util import lazy_groups_of
 from allennlp.data.token_indexers import SingleIdTokenIndexer
-import utils
 from datasets import load_dataset
-from allennlp.data import DatasetReader, Instance
-from allennlp.data.fields import TextField, LabelField, Field
-from allennlp.data.tokenizers import Tokenizer
-from nltk.tokenize import WhitespaceTokenizer
-from allennlp.data.token_indexers import TokenIndexer, SingleIdTokenIndexer
-from typing import Iterable, List, Dict
-from allennlp.data.tokenizers import Token
 from sklearn.model_selection import train_test_split
-
-
-def hotflip_attack(averaged_grad, embedding_matrix, trigger_token_ids,
-                   increase_loss=False, num_candidates=1, token_id_to_filter=None):
-    """
-    The "Hotflip" attack described in Equation (2) of the paper. This code is heavily inspired by
-    the nice code of Paul Michel here https://github.com/pmichel31415/translate/blob/paul/
-    pytorch_translate/research/adversarial/adversaries/brute_force_adversary.py
-
-    This function takes in the model's average_grad over a batch of examples, the model's
-    token embedding matrix, and the current trigger token IDs. It returns the top token
-    candidates for each position.
-
-    If increase_loss=True, then the attack reverses the sign of the gradient and tries to increase
-    the loss (decrease the model's probability of the true class). For targeted attacks, you want
-    to decrease the loss of the target class (increase_loss=False).
-    """
-    averaged_grad = averaged_grad.cpu()
-    embedding_matrix = embedding_matrix.cpu()
-    averaged_grad = averaged_grad.unsqueeze(0)
-    gradient_dot_embedding_matrix = torch.einsum("bij,kj->bik",
-                                                 (averaged_grad, embedding_matrix))
-    if not increase_loss:
-        # lower versus increase the class probability.
-        gradient_dot_embedding_matrix *= -1
-
-    # Set the gradient of filter tokens to be very low so that they are not selected.
-    if token_id_to_filter is not None:
-        for token_id in token_id_to_filter:
-            gradient_dot_embedding_matrix[:, :, token_id] = -1e9
-
-    if num_candidates > 1:  # get top k options
-        _, best_k_ids = torch.topk(
-            gradient_dot_embedding_matrix, num_candidates, dim=2)
-        return best_k_ids.detach().cpu().numpy()[0]
-    _, best_at_each_step = gradient_dot_embedding_matrix.max(2)
-    return best_at_each_step[0].detach().cpu().numpy()
+from typing import Iterable, List, Dict
 
 # Simple LSTM classifier that uses the final hidden state to classify Sentiment. Based on AllenNLP
 class LstmClassifier(Model):
@@ -125,22 +87,22 @@ class TwitterDatasetReader(DatasetReader):
 
 EMBEDDING_TYPE = "w2v"  # what type of word embeddings to use
 
+# Trains/Tests LSTM model fine-tuned on Amazon dataset
 
-def main():
 
-    # Set random seed
-    torch.manual_seed(42)
-
+def main(dataset_label_filter, test_triggers, model_no_str):
     # Read financial phrasebank dataset from HuggingFace
     # Load the Financial Phrasebank dataset from HuggingFace
-    tokenizers = {"tokens": WhitespaceTokenizer()}
+    tokenizers = {"tokens": TweetTokenizer(preserve_case=False, reduce_len=True, strip_handles=True)}
     token_indexers = {"tokens": SingleIdTokenIndexer(lowercase_tokens=True)}
-    reader = TwitterDatasetReader(tokenizers=tokenizers, token_indexers=token_indexers)
-    train_data = reader.read("train")
-    test_data = reader.read("test")
+    reader = TwitterDatasetReader(
+        tokenizers=tokenizers, token_indexers=token_indexers)
 
-    # Split data into train and test and validation sets
-    train_data, dev_data = train_test_split(train_data, test_size=0.2, random_state=42)
+    # 4% of train data, 10% of that for both dev and test data
+    train_data, _ = train_test_split(reader.read("train"), test_size=0.96)
+    train_data, dev_data = train_test_split(train_data, test_size=0.2)
+    dev_data, test_data, = train_test_split(dev_data, test_size=0.5)
+
     print("Number of training instances:", len(train_data))
 
     vocab = Vocabulary.from_instances(train_data)
@@ -165,22 +127,24 @@ def main():
         word_embedding_dim = 300
 
     # Initialize model, cuda(), and optimizer
-    word_embeddings = BasicTextFieldEmbedder({"tokens": token_embedding})
+    word_embeddings = BasicTextFieldEmbedder(
+        {"tokens": token_embedding}).cuda()
     encoder = PytorchSeq2VecWrapper(torch.nn.LSTM(word_embedding_dim,
                                                   hidden_size=512,
                                                   num_layers=2,
                                                   batch_first=True))
     model = LstmClassifier(word_embeddings, encoder, vocab)
-    # model.cuda()
+    model.cuda()
 
     # where to save the model
-    model_path = "sst/tmp/" + EMBEDDING_TYPE + "_" + "twitter_model.th"
-    vocab_path = "sst/tmp/" + EMBEDDING_TYPE + "_" + "twitter_vocab"
+    model_path = "tmp\\" + EMBEDDING_TYPE + "_twitter_" + \
+        dataset_label_filter + "_" + model_no_str + "model.th"
+    vocab_path = "tmp\\" + EMBEDDING_TYPE + "_twitter_" + "vocab"
 
     # if the model already exists (its been trained), load the pre-trained weights and vocabulary
     if os.path.isfile(model_path):
         vocab = Vocabulary.from_files(vocab_path)
-        model = LstmClassifier(word_embeddings, encoder, vocab)
+        model = LstmClassifier(word_embeddings, encoder, vocab).cuda()
         with open(model_path, 'rb') as f:
             model.load_state_dict(torch.load(f))
     # otherwise train model from scratch and save its weights
@@ -195,14 +159,13 @@ def main():
                           train_dataset=train_data,
                           validation_dataset=dev_data,
                           num_epochs=5,
-                          patience=1)
-        #cuda_device=0)
+                          patience=1,
+                          cuda_device=0)
         trainer.train()
         with open(model_path, 'wb') as f:
             torch.save(model.state_dict(), f)
         vocab.save_to_files(vocab_path)
-    model.train()
-    # model.train().cuda() # rnn cannot do backwards in train mode
+    model.train().cuda()  # rnn cannot do backwards in train mode
 
     # Register a gradient hook on the embeddings. This saves the gradient w.r.t. the word embeddings.
     # We use the gradient later in the attack.
@@ -215,32 +178,41 @@ def main():
     iterator = BasicIterator(batch_size=universal_perturb_batch_size)
     iterator.index_with(vocab)
 
+    # Build k-d Tree if you are using gradient + nearest neighbor attack
+    # tree = KDTree(embedding_weight.numpy())
+
     # filter the dataset to only positive or negative examples
     # (the trigger will cause the opposite prediction)
-    dataset_label_filter = "0"
+    print(f"dataset_label_filter: {dataset_label_filter}")
     targeted_dev_data = []
+    targeted_test_data = []
     for instance in dev_data:
         if instance['label'].label == dataset_label_filter:
             targeted_dev_data.append(instance)
-
-    targeted_test_data = []
     for instance in test_data:
         if instance['label'].label == dataset_label_filter:
             targeted_test_data.append(instance)
 
-    print("Number of dev instances:", len(targeted_dev_data))
+    # Get accuracy for triggers we want to test
+    if test_triggers is not None:
+        utils.get_accuracy(model, targeted_dev_data,
+                           vocab, trigger_token_ids=None)
+        utils.get_accuracy(model, targeted_test_data, vocab,
+                           trigger_token_ids=test_triggers)
+        return
 
     # get accuracy before adding triggers
     utils.get_accuracy(model, targeted_dev_data, vocab, trigger_token_ids=None)
     model.train()  # rnn cannot do backwards in train mode
 
-    negative_words_file = "sst/negative_words.txt"
-    positive_words_file = "sst/positive_words.txt"
+    negative_words_file = "negative_words.txt"
+    positive_words_file = "positive_words.txt"
+    # neutral_words_file = "vader_neutral_words.txt"
 
     # Initialize the set of token ids to filter out from candidates
     token_id_to_filter = {}
 
-    # Read in negative words and add them to the set
+    # # Read in negative words and add them to the set
     with open(negative_words_file) as f:
         for line in f:
             token_id_to_filter[vocab.get_token_index(line.strip())] = True
@@ -249,6 +221,15 @@ def main():
     with open(positive_words_file) as f:
         for line in f:
             token_id_to_filter[vocab.get_token_index(line.strip())] = True
+
+    # Read in neutral words; if a token in the vocab isn't neutral, add to set
+    # neutral_set = set()
+    # with open(neutral_words_file) as f:
+    #     for line in f:
+    #         neutral_set.add(vocab.get_token_index(line.strip()))
+    # for token_idx in range(vocab.get_vocab_size()):
+    #     if token_idx not in neutral_set:
+    #         token_id_to_filter[token_idx] = True
 
     # initialize triggers which are concatenated to the input
     num_trigger_tokens = 3
@@ -264,11 +245,22 @@ def main():
         averaged_grad = utils.get_average_grad(model, batch, trigger_token_ids)
 
         # pass the gradients to a particular attack to generate token candidates for each token.
-        cand_trigger_token_ids = hotflip_attack(averaged_grad,
-                                                embedding_weight,
-                                                trigger_token_ids,
-                                                num_candidates=5,
-                                                increase_loss=True, token_id_to_filter=token_id_to_filter)
+        cand_trigger_token_ids = attacks.hotflip_attack(averaged_grad,
+                                                        embedding_weight,
+                                                        trigger_token_ids,
+                                                        num_candidates=40,
+                                                        increase_loss=True,
+                                                        token_id_to_filter=token_id_to_filter)
+        # cand_trigger_token_ids = attacks.random_attack(embedding_weight,
+        #                                                trigger_token_ids,
+        #                                                num_candidates=40)
+        # cand_trigger_token_ids = attacks.nearest_neighbor_grad(averaged_grad,
+        #                                                        embedding_weight,
+        #                                                        trigger_token_ids,
+        #                                                        tree,
+        #                                                        100,
+        #                                                        num_candidates=40,
+        #                                                        increase_loss=True)
 
         # Tries all of the candidates and returns the trigger sequence with highest loss.
         trigger_token_ids = utils.get_best_candidates(model,
@@ -281,4 +273,11 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # Parameters
+    dataset_label_filter = "0"  # 0 attacks negative, 1 attacks positive
+    # If None, runs the attack as normal; if a list of 3 trigger ids, tests their accuracy on the model
+    test_triggers = None
+    # model_no_str: determines what file path the model is saved at
+    for i in range(1, 3):
+        main(dataset_label_filter, test_triggers, str(i))
+    # main(dataset_label_filter, test_triggers, "")
