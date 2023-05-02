@@ -6,7 +6,7 @@ from allennlp.data import DatasetReader, Instance
 from allennlp.data.fields import TextField, LabelField, Field
 from allennlp.data.token_indexers import TokenIndexer, SingleIdTokenIndexer
 from allennlp.data.tokenizers import Tokenizer, Token
-from nltk.tokenize import WhitespaceTokenizer
+from nltk.tokenize import RegexpTokenizer
 from allennlp.data.iterators import BucketIterator, BasicIterator
 from allennlp.data.vocabulary import Vocabulary
 from allennlp.models import Model
@@ -92,7 +92,7 @@ EMBEDDING_TYPE = "w2v" # what type of word embeddings to use
 def main(dataset_label_filter, test_triggers, model_no_str):
     # Read financial phrasebank dataset from HuggingFace
     # Load the Financial Phrasebank dataset from HuggingFace
-    tokenizers = {"tokens": WhitespaceTokenizer()}
+    tokenizers = {"tokens": RegexpTokenizer(r'\w+\'?\w*')}
     token_indexers = {"tokens": SingleIdTokenIndexer(lowercase_tokens=True)}
     reader = AmazonDatasetReader(tokenizers=tokenizers, token_indexers=token_indexers)
 
