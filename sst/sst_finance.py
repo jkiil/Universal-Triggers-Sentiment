@@ -262,7 +262,7 @@ def main(dataset_label_filter, test_triggers, model_no_str):
 
 if __name__ == '__main__':
     # Parameters
-    dataset_label_filter = "1" # 0 attacks negative, 1 attacks positive
+    dataset_label_filter = "0" # 0 attacks negative, 1 attacks positive
     test_triggers = None # If None, runs the attack as normal; if a list of 3 trigger ids, tests their accuracy on the model
     # model_no_str: determines what file path the model is saved at
     for i in range(1, 6):

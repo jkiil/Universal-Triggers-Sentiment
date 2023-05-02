@@ -63,6 +63,7 @@ def main(model_type, dataset_label_filter, test_triggers, model_no_str):
                                                     token_indexers={"tokens": single_id_indexer})
     test_data = reader.read('https://s3-us-west-2.amazonaws.com/allennlp/datasets/sst/test.txt')
 
+    print("Number of training instances:", len(train_data))
     vocab = Vocabulary.from_instances(train_data)
 
     # Randomly initialize vectors
