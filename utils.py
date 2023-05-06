@@ -16,6 +16,7 @@ def get_embedding_weight(model):
     for module in model.modules():
         if isinstance(module, TextFieldEmbedder):
             for embed in module._token_embedders.keys():
+                print(f"token embedder key: {embed}")
                 embedding_weight = module._token_embedders[embed].weight.cpu().detach()
     return embedding_weight
 
@@ -105,7 +106,7 @@ def get_accuracy(model, dev_dataset, vocab, trigger_token_ids=None, snli=False):
     iterator.index_with(vocab)
     if trigger_token_ids is None:
         for batch in lazy_groups_of(iterator(dev_dataset, num_epochs=1, shuffle=False), group_size=1):
-            evaluate_batch(model, batch, trigger_token_ids, snli)
+            evaluate_batch(model, batch, None, snli)
         print("Without Triggers: " + str(model.get_metrics()['accuracy']))
     else:
         print_string = ""
@@ -115,6 +116,7 @@ def get_accuracy(model, dev_dataset, vocab, trigger_token_ids=None, snli=False):
         for batch in lazy_groups_of(iterator(dev_dataset, num_epochs=1, shuffle=False), group_size=1):
             evaluate_batch(model, batch, trigger_token_ids, snli)
         print("Current Triggers: " + print_string + " : " + str(model.get_metrics()['accuracy']))
+        print("Trigger token ids: ", trigger_token_ids)
 
 def get_best_candidates(model, batch, trigger_token_ids, cand_trigger_token_ids, snli=False, beam_size=1):
     """"

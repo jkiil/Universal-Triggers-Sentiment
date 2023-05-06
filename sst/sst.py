@@ -86,7 +86,7 @@ class LstmClassifier(Model):
 
 EMBEDDING_TYPE = "w2v" # what type of word embeddings to use
 
-def main():
+def main(model_type, dataset_label_filter, test_triggers, model_no_str):
     # load the binary SST dataset.
     single_id_indexer = SingleIdTokenIndexer(lowercase_tokens=True) # word tokenizer
     # use_subtrees gives us a bit of extra data by breaking down each example into sub sentences.
@@ -97,8 +97,11 @@ def main():
     reader = StanfordSentimentTreeBankDatasetReader(granularity="2-class",
                                                     token_indexers={"tokens": single_id_indexer})
     dev_data = reader.read('https://s3-us-west-2.amazonaws.com/allennlp/datasets/sst/dev.txt')
+    reader = StanfordSentimentTreeBankDatasetReader(granularity="2-class",
+                                                    token_indexers={"tokens": single_id_indexer})
     test_data = reader.read('https://s3-us-west-2.amazonaws.com/allennlp/datasets/sst/test.txt')
 
+    print("Number of training instances:", len(train_data))
     vocab = Vocabulary.from_instances(train_data)
 
     # Randomly initialize vectors
@@ -120,22 +123,31 @@ def main():
         word_embedding_dim = 300
 
     # Initialize model, cuda(), and optimizer
-    word_embeddings = BasicTextFieldEmbedder({"tokens": token_embedding})
-    encoder = PytorchSeq2VecWrapper(torch.nn.LSTM(word_embedding_dim,
-                                                  hidden_size=512,
-                                                  num_layers=2,
-                                                  batch_first=True))
+    word_embeddings = BasicTextFieldEmbedder({"tokens": token_embedding}).cuda()
+    if model_type == "LSTM":
+        encoder = PytorchSeq2VecWrapper(torch.nn.LSTM(word_embedding_dim,
+                                                    hidden_size=512,
+                                                    num_layers=2,
+                                                    batch_first=True))
+    elif model_type == "GRU":
+        encoder = PytorchSeq2VecWrapper(torch.nn.GRU(word_embedding_dim,
+                                                    hidden_size=512,
+                                                    num_layers=2,
+                                                    batch_first=True))
+    else:
+        print('model_type variable must be "LSTM" or "GRU"')
+        return
     model = LstmClassifier(word_embeddings, encoder, vocab)
-    # model.cuda()
+    model.cuda()
 
     # where to save the model
-    model_path = "sst/tmp/" + EMBEDDING_TYPE + "_" + "model.th"
-    vocab_path = "sst/tmp/" + EMBEDDING_TYPE + "_" + "vocab"
+    model_path = "tmp\\" + EMBEDDING_TYPE + "_" + model_type + "_" + dataset_label_filter + "_" + model_no_str + "model.th"
+    vocab_path = "tmp\\" + EMBEDDING_TYPE + "_" + "vocab"
 
     # if the model already exists (its been trained), load the pre-trained weights and vocabulary
     if os.path.isfile(model_path):
         vocab = Vocabulary.from_files(vocab_path)
-        model = LstmClassifier(word_embeddings, encoder, vocab)
+        model = LstmClassifier(word_embeddings, encoder, vocab).cuda()
         with open(model_path, 'rb') as f:
             model.load_state_dict(torch.load(f))
     # otherwise train model from scratch and save its weights
@@ -144,19 +156,18 @@ def main():
         iterator.index_with(vocab)
         optimizer = optim.Adam(model.parameters())
         trainer = Trainer(model=model,
-                          optimizer=optimizer,
-                          iterator=iterator,
-                          train_dataset=train_data,
-                          validation_dataset=dev_data,
-                          num_epochs=5,
-                          patience=1)
-                          #cuda_device=0)
+                            optimizer=optimizer,
+                            iterator=iterator,
+                            train_dataset=train_data,
+                            validation_dataset=dev_data,
+                            num_epochs=5,
+                            patience=1,
+                            cuda_device=0)
         trainer.train()
         with open(model_path, 'wb') as f:
             torch.save(model.state_dict(), f)
         vocab.save_to_files(vocab_path)
-    model.train()
-    # model.train().cuda() # rnn cannot do backwards in train mode
+    model.train().cuda() # rnn cannot do backwards in train mode
 
     # Register a gradient hook on the embeddings. This saves the gradient w.r.t. the word embeddings.
     # We use the gradient later in the attack.
@@ -173,29 +184,34 @@ def main():
 
     # filter the dataset to only positive or negative examples
     # (the trigger will cause the opposite prediction)
-    # 0: negative, 1: positive
-    dataset_label_filter = "0"
+    print(f"dataset_label_filter: {dataset_label_filter}")
     targeted_dev_data = []
+    targeted_test_data = []
     for instance in dev_data:
         if instance['label'].label == dataset_label_filter:
             targeted_dev_data.append(instance)
-
-    targeted_test_data = []
     for instance in test_data:
         if instance['label'].label == dataset_label_filter:
             targeted_test_data.append(instance)
+
+    # Get accuracy for triggers we want to test
+    if test_triggers is not None:
+        utils.get_accuracy(model, targeted_dev_data, vocab, trigger_token_ids=None)
+        utils.get_accuracy(model, targeted_test_data, vocab, trigger_token_ids=test_triggers)
+        return
 
     # get accuracy before adding triggers
     utils.get_accuracy(model, targeted_dev_data, vocab, trigger_token_ids=None)
     model.train() # rnn cannot do backwards in train mode
 
-    negative_words_file = "sst/negative_words.txt"
-    positive_words_file = "sst/positive_words.txt"
+    negative_words_file = "negative_words.txt"
+    positive_words_file = "positive_words.txt"
+    # neutral_words_file = "vader_neutral_words.txt"
 
     # Initialize the set of token ids to filter out from candidates
     token_id_to_filter = {}
 
-    # Read in negative words and add them to the set
+    # # Read in negative words and add them to the set
     with open(negative_words_file) as f:
         for line in f:
             token_id_to_filter[vocab.get_token_index(line.strip())] = True
@@ -204,6 +220,15 @@ def main():
     with open(positive_words_file) as f:
         for line in f:
             token_id_to_filter[vocab.get_token_index(line.strip())] = True
+
+    # Read in neutral words; if a token in the vocab isn't neutral, add to set
+    # neutral_set = set()
+    # with open(neutral_words_file) as f:
+    #     for line in f:
+    #         neutral_set.add(vocab.get_token_index(line.strip()))
+    # for token_idx in range(vocab.get_vocab_size()):
+    #     if token_idx not in neutral_set:
+    #         token_id_to_filter[token_idx] = True
 
     # initialize triggers which are concatenated to the input
     num_trigger_tokens = 3
@@ -223,7 +248,18 @@ def main():
                                                         embedding_weight,
                                                         trigger_token_ids,
                                                         num_candidates=40,
-                                                        increase_loss=True, token_id_to_filter=token_id_to_filter)
+                                                        increase_loss=True,
+                                                        token_id_to_filter=token_id_to_filter)
+        # cand_trigger_token_ids = attacks.random_attack(embedding_weight,
+        #                                                trigger_token_ids,
+        #                                                num_candidates=40)
+        # cand_trigger_token_ids = attacks.nearest_neighbor_grad(averaged_grad,
+        #                                                        embedding_weight,
+        #                                                        trigger_token_ids,
+        #                                                        tree,
+        #                                                        100,
+        #                                                        num_candidates=40,
+        #                                                        increase_loss=True)
 
         # Tries all of the candidates and returns the trigger sequence with highest loss.
         trigger_token_ids = utils.get_best_candidates(model,
@@ -235,4 +271,11 @@ def main():
     utils.get_accuracy(model, targeted_test_data, vocab, trigger_token_ids)
 
 if __name__ == '__main__':
-    main()
+    # Parameters
+    model_type = "LSTM" # "GRU" or "LSTM"
+    dataset_label_filter = "0" # 0 attacks negative, 1 attacks positive
+    test_triggers = None # If None, runs the attack as normal; if a list of 3 trigger ids, tests their accuracy on the model
+    # model_no_str: determines what file path the model is saved at
+    # for i in range(1, 6):
+    #     main(model_type, dataset_label_filter, test_triggers, str(i))
+    main(model_type, dataset_label_filter, test_triggers, "")

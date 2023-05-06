@@ -1,6 +1,20 @@
+# Windows (CPU)
 # conda install pytorch-cpu==1.1.0 torchvision-cpu==0.3.0 cpuonly -c pytorch
 # conda install conda-forge numpy=1.19.5
+
+# Windows (CUDA)
+# conda install python=3.7 pip
+# conda install pytorch==1.1.0 torchvision==0.3.0 cudatoolkit=10.0 -c pytorch
+# conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
+# pip install -r requirements.txt
+
+# OR: download torch 1.1.0 and install from wheel (also installs numpy)!
+# pip install -r requirements.txt
+
+# torch==1.1.0
+numpy==1.22.0
 pytorch_transformers==1.1.0
 allennlp==0.8.5
 scikit_learn==0.21.3
 overrides==3.1.0
+datasets

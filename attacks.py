@@ -6,7 +6,7 @@ import torch
 import numpy
 
 def hotflip_attack(averaged_grad, embedding_matrix, trigger_token_ids,
-                   increase_loss=False, num_candidates=1):
+                   increase_loss=False, num_candidates=1, token_id_to_filter=None):
     """
     The "Hotflip" attack described in Equation (2) of the paper. This code is heavily inspired by
     the nice code of Paul Michel here https://github.com/pmichel31415/translate/blob/paul/
@@ -26,9 +26,16 @@ def hotflip_attack(averaged_grad, embedding_matrix, trigger_token_ids,
                                                          embedding_matrix).detach().unsqueeze(0)
     averaged_grad = averaged_grad.unsqueeze(0)
     gradient_dot_embedding_matrix = torch.einsum("bij,kj->bik",
-                                                 (averaged_grad, embedding_matrix))        
+                                                 (averaged_grad, embedding_matrix))
     if not increase_loss:
-        gradient_dot_embedding_matrix *= -1    # lower versus increase the class probability.
+        # lower versus increase the class probability.
+        gradient_dot_embedding_matrix *= -1
+
+    # Set the gradient of filter tokens to be very low so that they are not selected.
+    if token_id_to_filter is not None:
+        for token_id in token_id_to_filter:
+            gradient_dot_embedding_matrix[:, :, token_id] = -1e9
+
     if num_candidates > 1: # get top k options
         _, best_k_ids = torch.topk(gradient_dot_embedding_matrix, num_candidates, dim=2)
         return best_k_ids.detach().cpu().numpy()[0]
