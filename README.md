@@ -1,4 +1,4 @@
-# Universal Adversarial Triggers for Attacking Sentiment Analysis
+# Universal Adversarial Triggers for Attacking Sentiment Classification
 
 This repo is based on the official code for the EMNLP 2019 paper, Universal Adversarial Triggers for Attacking and Analyzing NLP, found [here](https://github.com/Eric-Wallace/universal-triggers). This repository contains the code for replicating our experiments and creating universal triggers.
 
