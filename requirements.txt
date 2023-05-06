@@ -8,12 +8,13 @@
 # conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 # pip install -r requirements.txt
 
-# OR: download torch 1.1.0 and install from wheel (also installs numpy)!!!!!
+# OR: download torch 1.1.0 and install from wheel (also installs numpy)!
 # pip install -r requirements.txt
 
 # torch==1.1.0
-# numpy==1.22.0
+numpy==1.22.0
 pytorch_transformers==1.1.0
 allennlp==0.8.5
 scikit_learn==0.21.3
 overrides==3.1.0
+datasets
