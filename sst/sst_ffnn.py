@@ -142,6 +142,7 @@ class FFNNClassifier(Model):
 EMBEDDING_TYPE = "w2v" # what type of word embeddings to use
 
 def main():
+
     # load the binary SST dataset.
     single_id_indexer = SingleIdTokenIndexer(lowercase_tokens=True) # word tokenizer
     # use_subtrees gives us a bit of extra data by breaking down each example into sub sentences.
@@ -155,6 +156,12 @@ def main():
     test_data = reader.read('https://s3-us-west-2.amazonaws.com/allennlp/datasets/sst/test.txt')
 
     vocab = Vocabulary.from_instances(train_data)
+
+    # Parameters
+    trigger1 = vocab.get_token_index("purposeless")
+    trigger2 = vocab.get_token_index("the-week")
+    trigger3 = vocab.get_token_index("thewlis")
+    test_triggers = [trigger1, trigger2, trigger3]
 
     # Randomly initialize vectors
     if EMBEDDING_TYPE == "None":
@@ -180,8 +187,8 @@ def main():
     # model.cuda()
 
     # where to save the model
-    model_path = "sst/ffnn/" + EMBEDDING_TYPE + "_" + "ffnn_model.th"
-    vocab_path = "sst/ffnn/" + EMBEDDING_TYPE + "_" + "ffnn_vocab"
+    model_path = "sst/ffnn/" + EMBEDDING_TYPE + "_pos2_" + "ffnn_model.th"
+    vocab_path = "sst/ffnn/" + EMBEDDING_TYPE + "_pos2_" + "ffnn_vocab"
 
     # if the model already exists (its been trained), load the pre-trained weights and vocabulary
     if os.path.isfile(model_path):
@@ -225,7 +232,7 @@ def main():
     # filter the dataset to only positive or negative examples
     # (the trigger will cause the opposite prediction)
     # 0: negative, 1: positive
-    dataset_label_filter = "0"
+    dataset_label_filter = "1"
     targeted_dev_data = []
     for instance in dev_data:
         if instance['label'].label == dataset_label_filter:
@@ -235,6 +242,12 @@ def main():
     for instance in test_data:
         if instance['label'].label == dataset_label_filter:
             targeted_test_data.append(instance)
+
+    # Get accuracy for triggers we want to test
+    if test_triggers is not None:
+        utils.get_accuracy(model, targeted_test_data, vocab, trigger_token_ids=None)
+        utils.get_accuracy(model, targeted_test_data, vocab, trigger_token_ids=test_triggers)
+        return
 
     # get accuracy before adding triggers
     utils.get_accuracy(model, targeted_dev_data, vocab, trigger_token_ids=None)
@@ -283,7 +296,7 @@ def main():
                                                       cand_trigger_token_ids)
 
     # print accuracy after adding triggers
-    utils.get_accuracy(model, targeted_test_data, vocab, trigger_token_ids)
+    utils.get_accuracy(model, targeted_dev_data, vocab, trigger_token_ids)
 
 if __name__ == '__main__':
     main()
