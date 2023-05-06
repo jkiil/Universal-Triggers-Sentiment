@@ -26,12 +26,6 @@ class FFNNClassifier(Model):
     def __init__(self, word_embeddings, word_embedding_dim, d_hidden, vocab):
         """
         Initialize a two-layer feedforward neural network with sigmoid activation.
-        Parameters:
-            `words_vocab`: vocabulary of words
-            `tags_vocab`: vocabulary of tags
-            `window_size`: size of the context window (w in Problem 3 of Assignment #2)
-            `d_emb`: dimension of word embeddings (D in Problem 3 of Assignment #2)
-            `d_hidden`: dimension of the hidden layer (H in Problem 3 of Assignment #2)
         """
         super().__init__(vocab)
         self.embed = word_embeddings
@@ -41,15 +35,6 @@ class FFNNClassifier(Model):
         self.loss_function = torch.nn.CrossEntropyLoss()
 
     def forward(self, tokens, label) -> torch.Tensor:
-        """
-        Given the word indexes in a context window, predict the logits of the NER tag.
-        Parameters:
-            `context_idxs`: a batch_size x (2 * window_size + 1) tensor
-                          context_idxs[i] contains word indexes in the window of the i'th data example.
-        Return values:
-            `logits`: a batch_size x 5 tensor (\hat{y}^{(t)} in Problem 3 of Assignment #2, without softmax)
-                    logits[i][j] is the output score (before softmax) of the i'th example for tag j.
-        """
         embeddings = self.embed(tokens)
         mean_embeddings = torch.mean(embeddings, dim=1)
         hidden = self.hidden(mean_embeddings)
