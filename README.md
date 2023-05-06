@@ -4,7 +4,7 @@ This repo is based on the official code for the EMNLP 2019 paper, Universal Adve
 
 ## Dependencies
 
-This code is written using PyTorch. The code for GPT-2 is based on [HuggingFace's Transformer repo](https://github.com/huggingface/pytorch-transformers) and the experiments on SQuAD, SNLI, and SST use [AllenNLP](https://github.com/allenai/allennlp/). The code is flexible and should be generally applicable to most models (especially if its in AllenNLP), i.e., you can easily extend this code to work for the model or task you want. 
+This code is written using PyTorch and [AllenNLP](https://github.com/allenai/allennlp/). The code is flexible and should be generally applicable to most models (especially if its in AllenNLP), i.e., you can easily extend this code to work for the model or task you want. 
 
 The code is made to run on GPU, and a GPU is likely necessary due to the costs of running the larger models. I used one GTX 960 for all the experiments; the sst.py experiments run in a few minutes, and the other models can take up to half an hour.
 
