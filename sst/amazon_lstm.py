@@ -96,7 +96,7 @@ def main(dataset_label_filter, test_triggers, model_no_str):
     token_indexers = {"tokens": SingleIdTokenIndexer(lowercase_tokens=True)}
     reader = AmazonDatasetReader(tokenizers=tokenizers, token_indexers=token_indexers)
 
-    # Sample 60% of data for now
+    # Sample 40% of data for now
     train_data, _ = train_test_split(reader.read("train"), test_size=0.6)
     dev_data, _ = train_test_split(reader.read("validation"), test_size=0.6)
     test_data, _ = train_test_split(reader.read("test"), test_size=0.6)
