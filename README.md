@@ -22,12 +22,20 @@ pip install -r requirements.txt
 ```
 ## Getting Started
 
-The `sst` folder contains our scripts to generate triggers that attack sentiment classification.
-+ `sst.py` contains three parameters: model_type, dataset_label_filter, and test_triggers, which are described at the bottom of the file. It walks through training a simple GloVe-based LSTM/GRU sentiment analysis model that can be used to generate and test triggers.
-+ `sst_amazon.py` contains two parameters: dataset_label_filter and test_triggers, and can be used to generate and test LSTM triggers based on HuggingFace's amazon_reviews_multi dataset.
-+ `sst_finance.py` contains two parameters: dataset_label_filter and test_triggers, and can be used to generate and test LSTM triggers based on HuggingFace's financial_phrasebank dataset.
-+ `sst_twitter.py` contains two parameters: dataset_label_filter and test_triggers, and can be used to generate and test LSTM triggers based on the Sentiment140 dataset.
+The `sst` folder contains our scripts to generate triggers that attack sentiment classification. Each of the files' main functions contain two parameters: dataset_label_filter and test_triggers, which are described at the bottom of each file. To run these scripts, first `cd` into the `sst` folder.
++ `sst_lstm.py` walks through training a simple GloVe-based LSTM sentiment analysis model that can be used to generate and test triggers.
++ `sst_gru.py` walks through training a simple GloVe-based GRU sentiment analysis model that can be used to generate and test triggers.
++ `sst_ffnn.py` walks through training a simple feedforward neural network bag-of-words sentiment analysis model that can be used to generate and test triggers.
++ `sst_amazon.py` can be used to generate and test LSTM triggers based on HuggingFace's amazon_reviews_multi dataset.
++ `sst_finance.py` can be used to generate and test LSTM triggers based on HuggingFace's financial_phrasebank dataset.
++ `sst_twitter.py` can be used to generate and test LSTM triggers based on the Sentiment140 dataset.
 
-The gradient-based attacks are written in `attacks.py`. 
-The file `utils.py` contains the code for evaluating models, computing gradients, and evaluating the top candidates for the attack.
+The root folder contains our Jupyter notebooks to fine-tune BERT models and test triggers.
++ `BERT_SST.ipynb` works with the Stanford Sentiment Treebank dataset.
++ `BERT_Finance.ipynb` works with HuggingFace's financial_phrasebank dataset.
++ `BERT_Amazon.ipynb` works with HuggingFace's amazon_reviews_multi dataset.
++ `BERT_Twitter.ipynb` works with the Sentiment140 dataset.
+
+The gradient-based attacks are written in `attacks.py`, and `utils.py` contains the code for evaluating models, computing gradients, and evaluating the top candidates for the attack. These files are unchanged from the original [repo](https://github.com/Eric-Wallace/universal-triggers), with the exception of code added to filter the sentiment words listed in `positive_words.txt` and `negative_words.txt`.
+
 The `tmp` folder contains some of the vocab and models that we generated. Feel free to delete the files and re-run to get your own results.
