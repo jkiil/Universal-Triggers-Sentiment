@@ -39,3 +39,6 @@ The root folder contains our Jupyter notebooks to fine-tune BERT models and test
 The gradient-based attacks are written in `attacks.py`, and `utils.py` contains the code for evaluating models, computing gradients, and evaluating the top candidates for the attack. These files are unchanged from the original [repo](https://github.com/Eric-Wallace/universal-triggers), with the exception of code added to filter the sentiment words listed in `positive_words.txt` and `negative_words.txt`.
 
 The `tmp` folder contains some of the vocab and models that we generated. Feel free to delete the files and re-run to get your own results.
+
+## References
+The file `sst_lstm.py`, `attacks.py`, and `utils.py` were obtained from Eric Wallace's [reference repository](https://github.com/Eric-Wallace/universal-triggers), and are largely the same except for some minor modifications. We developed the rest of our code based on these three files, and while a lot of code is shared, they were written by us to suit our own unique experiments.
